@@ -1,6 +1,8 @@
 from django.db import models
 from base.models.list_model import List
-from base.models.user_model import User
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 class Card(models.Model):
     card_id = models.AutoField(primary_key=True)

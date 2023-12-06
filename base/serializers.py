@@ -2,22 +2,28 @@ from rest_framework import serializers
 from base.models.list_model import List
 from base.models.card_model import Card
 from base.models.comment_model import Comment
-from base.models.user_model import User
 from base.models.project_model import Project
 from django.core.validators import RegexValidator
 
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
 class UserSerializer(serializers.ModelSerializer):
-    email_address = serializers.EmailField(validators=[RegexValidator(regex='^[a-zA-Z0-9_.+-]+@(?:[a-zA-Z0-9-]+\.)?iitr\.ac\.in$')])
+    email = serializers.EmailField(validators=[RegexValidator(regex='^[a-zA-Z0-9_.+-]+@(?:[a-zA-Z0-9-]+\.)?iitr\.ac\.in$')])
 
     class Meta:
         model = User
         fields = (
-                  'user_id',
-                  'name',
+                  'id',
+                  'username',
                   'is_admin',
-                  'email_address',
-                  'enrollment_number',
+                  'email',
                   'current_year',
+                  'first_name',
+                  'last_name'
                 )
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -123,3 +129,13 @@ class CommentDefaultSerializer(serializers.ModelSerializer):
                   'sender',
                   'contents'
                   )
+        
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        token['email'] = user.email
+        token['first_name'] = user.first_name
+
+        return token

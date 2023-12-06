@@ -1,5 +1,7 @@
 from django.db import models
-from base.models.user_model import User
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 class Project(models.Model):
     project_id = models.AutoField(primary_key=True)

@@ -1,17 +1,17 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.hashers import make_password
 
 class User(AbstractUser):
     
 
-    user_id = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     username = models.CharField(max_length=255, unique=True, null=True)
     is_admin = models.BooleanField(default=False)
     email = models.EmailField(null=True)
-    enrollment_number = models.IntegerField(blank=True, null=True)
     current_year = models.IntegerField(null=True)
 
-    password = models.CharField(max_length=255, null=True, blank=True)
+    password = models.CharField(max_length=128, default=make_password('password'))
 
     REQUIRED_FIELDS = []
 

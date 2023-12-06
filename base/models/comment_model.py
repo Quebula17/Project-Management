@@ -1,6 +1,8 @@
 from django.db import models
 from base.models.card_model import Card
-from base.models.user_model import User
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 class Comment(models.Model):
     comment_id = models.AutoField(primary_key=True)

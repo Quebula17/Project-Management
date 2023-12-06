@@ -1,6 +1,11 @@
 from django.urls import path, include
-from base.views import authorization, project_viewset, user_viewset, list_viewset, card_viewset, comment_viewset
+from base.views import authorization, project_viewset, user_viewset, list_viewset, card_viewset, comment_viewset, authenticate
 from rest_framework.routers import DefaultRouter
+
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 
 router = DefaultRouter()
@@ -15,4 +20,8 @@ urlpatterns = [
     path('oauth/authorize/', authorization.oauth_authorize, name='oauth_authorize'),
     path('oauth/callback/', authorization.get_access_token, name='get_access_token'),
     path('get_user_data/', authorization.get_user_data, name='get_user_data'),
+
+
+    path('token/', authenticate.CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
