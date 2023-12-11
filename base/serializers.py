@@ -3,6 +3,7 @@ from base.models.list_model import List
 from base.models.card_model import Card
 from base.models.comment_model import Comment
 from base.models.project_model import Project
+from base.models.black_listed_users import BlacklistedUser
 from django.core.validators import RegexValidator
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -130,6 +131,28 @@ class CommentDefaultSerializer(serializers.ModelSerializer):
                   'contents'
                   )
         
+class BlacklistedUserSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+
+    class Meta:
+        model = BlacklistedUser
+        fields = (
+                  'id',
+                  'user',
+                  )
+        
+class BlacklistedUserDefaultSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = BlacklistedUser
+        fields = (
+                  'id',
+                  'user',
+                  )
+
+
+
+
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
@@ -137,5 +160,9 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         token['email'] = user.email
         token['first_name'] = user.first_name
+        token['last_name'] = user.last_name
+        token['username'] = user.username
+        token['current_year'] = user.current_year
+        token['is_admin'] = user.is_admin
 
         return token

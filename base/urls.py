@@ -1,5 +1,5 @@
 from django.urls import path, include
-from base.views import authorization, project_viewset, user_viewset, list_viewset, card_viewset, comment_viewset, authenticate
+from base.views import authorization, project_viewset, black_listed_user_viewset, user_viewset, list_viewset, card_viewset, comment_viewset, authenticate
 from rest_framework.routers import DefaultRouter
 
 from rest_framework_simplejwt.views import (
@@ -14,6 +14,7 @@ router.register(r'users', user_viewset.UserViewSet,basename="user")
 router.register(r'lists', list_viewset.ListViewSet,basename="list")
 router.register(r'cards', card_viewset.CardViewSet,basename="card")
 router.register(r'comments', comment_viewset.CommentViewSet,basename="comment")
+router.register(r'blacklisted_users', black_listed_user_viewset.BlacklistedUserViewSet,basename="blacklisted_user")
 
 urlpatterns = [
     path('', include(router.urls)),

@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from dotenv import load_dotenv
 import os
 from django.contrib.auth import get_user_model
+from base.models.black_listed_users import BlacklistedUser
 
 User = get_user_model()
 
@@ -11,14 +12,14 @@ load_dotenv()
 
 
 def user_exists(username):
-    try:
-        user = User.objects.get(username=username)
-        return True
-    except User.DoesNotExist:
-        return False
+    return User.objects.filter(username=username).exists()
 
+
+def is_user_blacklisted(username):
+    return BlacklistedUser.objects.filter(user__username=username).exists()
 
 def oauth_authorize(request):
+
     CLIENT_ID = os.environ.get('OMNIPORT_CLIENT_ID')
     REDIRECT_URI = 'http://localhost:8000/api/oauth/callback/'
 
@@ -72,6 +73,9 @@ def get_user_data(request):
         full_name=full_name.split() 
 
         print(full_name)
+
+        if is_user_blacklisted(username):
+            return HttpResponse('<html><body style="display: flex; justify-content: center; align-items: center; height: 100vh;"><h1 style="text-align: center; font-weight: bold;">You are blacklisted</h1></body></html>', status=403)
 
 
         if not user_exists(username) and role == 'Maintainer':

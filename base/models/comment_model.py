@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 class Comment(models.Model):
+    
     comment_id = models.AutoField(primary_key=True)
     card = models.ForeignKey(Card, on_delete=models.CASCADE, related_name='comments')
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_comments')
